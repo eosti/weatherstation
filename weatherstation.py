@@ -37,7 +37,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # Create temp/humidity object through I2C
 sensor = adafruit_si7021.SI7021(i2c)
 
-print('Connected as ' config.io_api_username)
+print('Connected as %s' % config.io_api_username)
 print('Reading sensors every %d seconds.' % LOOP_DELAY)
 
 while True:
