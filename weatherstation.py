@@ -37,8 +37,11 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # Create temp/humidity object through I2C
 sensor = adafruit_si7021.SI7021(i2c)
 
+print('Connected as ' config.io_api_username)
+print('Reading sensors every %d seconds.' % LOOP_DELAY)
+
 while True:
-    print('Reading sensors...')
+    # print('Reading sensors...')
 
     # Read air quality
     data = uart.read(32)  # read up to 32 bytes
@@ -79,24 +82,27 @@ while True:
     # Read Si7021 
     temp_data = sensor.temperature
     humidity_data = sensor.relative_humidity
-
-    # Data collected, let's send it in!
-    print('Sending data to Adafruit I/O...')
-    print("---------------------------------------")
-
-    print('Temperature: %0.1f C' % temp_data)
-    aio.send(outside_temp_feed.key, temp_data)
-    print('Humidity: %0.1f %%' % humidity_data)
-    aio.send(outside_humidity_feed.key, humidity_data)
-
-    print('PM 1.0: ', pm10_standard)
-    aio.send(pm_1_feed.key, pm10_standard)
-    print('PM 2.5: ', pm25_standard)
-    aio.send(pm_2_feed.key, pm25_standard)
-    print('PM 10: ', pm100_standard)
-    aio.send(pm_10_feed.key, pm100_standard)
     
-    print()
+    try:
+        # Data collected, let's send it in!
+        # print('Sending data to Adafruit I/O...')
+        # print("---------------------------------------")
+
+        # print('Temperature: %0.1f C' % temp_data)
+        aio.send(outside_temp_feed.key, temp_data)
+        # print('Humidity: %0.1f %%' % humidity_data)
+        aio.send(outside_humidity_feed.key, humidity_data)
+
+        # print('PM 1.0: ', pm10_standard)
+        aio.send(pm_1_feed.key, pm10_standard)
+        # print('PM 2.5: ', pm25_standard)
+        aio.send(pm_2_feed.key, pm25_standard)
+        # print('PM 10: ', pm100_standard)
+        aio.send(pm_10_feed.key, pm100_standard)
+    except:
+        print('Unable to upload data. Skipping.')
+    
+    # print()
 
     # Reset buffer
     buffer = buffer[32:]
