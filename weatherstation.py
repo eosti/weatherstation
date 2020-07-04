@@ -25,6 +25,8 @@ pm_1_feed = aio.feeds('pm-1-dot-0')
 pm_2_feed = aio.feeds('pm-2-dot-5')
 pm_10_feed = aio.feeds('pm-10')
 
+print('Connected as %s' % config.io_api_username)
+
 # Create UART object for air quality
 import serial
 uart = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=0.25)
@@ -44,7 +46,11 @@ while True:
     # print('Reading sensors...')
 
     # Read air quality
-    data = uart.read(32)  # read up to 32 bytes
+    try:
+        data = uart.read(32)  # read up to 32 bytes
+    except:
+        print('UART connection error. Skipping.')
+
     data = list(data)
     # print("read: ", data)          # this is a bytearray type
 
@@ -65,6 +71,7 @@ while True:
     frame_len = struct.unpack(">H", bytes(buffer[2:4]))[0]
     if frame_len != 28:
         buffer = []
+        print('Incorrect UART packet length. Skipping.')
         continue
 
     frame = struct.unpack(">HHHHHHHHHHHHHH", bytes(buffer[4:]))
@@ -77,12 +84,16 @@ while True:
 
     if check != checksum:
         buffer = []
+        print('UART checksum error. Skipping.')
         continue
-
-    # Read Si7021 
-    temp_data = sensor.temperature
-    humidity_data = sensor.relative_humidity
     
+    try:
+        # Read Si7021 
+        temp_data = sensor.temperature
+        humidity_data = sensor.relative_humidity
+    except:
+        print('Si7021 read error. Skipping.')
+
     try:
         # Data collected, let's send it in!
         # print('Sending data to Adafruit I/O...')
