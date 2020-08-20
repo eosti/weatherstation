@@ -74,12 +74,14 @@ while True:
         buffer = []
         print('Incorrect UART packet length. Skipping.')
         continue
+    try:
+        frame = struct.unpack(">HHHHHHHHHHHHHH", bytes(buffer[4:]))
 
-    frame = struct.unpack(">HHHHHHHHHHHHHH", bytes(buffer[4:]))
-
-    pm10_standard, pm25_standard, pm100_standard, pm10_env, \
-        pm25_env, pm100_env, particles_03um, particles_05um, particles_10um, \
-        particles_25um, particles_50um, particles_100um, skip, checksum = frame
+        pm10_standard, pm25_standard, pm100_standard, pm10_env, \
+            pm25_env, pm100_env, particles_03um, particles_05um, particles_10um, \
+            particles_25um, particles_50um, particles_100um, skip, checksum = frame
+    except:
+        print('UART parsing error. Skipping.')
 
     check = sum(buffer[0:30])
 
