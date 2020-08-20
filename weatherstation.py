@@ -80,8 +80,6 @@ while True:
         pm10_standard, pm25_standard, pm100_standard, pm10_env, \
             pm25_env, pm100_env, particles_03um, particles_05um, particles_10um, \
             particles_25um, particles_50um, particles_100um, skip, checksum = frame
-    except:
-        print('UART parsing error. Skipping.')
 
     check = sum(buffer[0:30])
 
@@ -90,6 +88,9 @@ while True:
         print('UART checksum error. Skipping.')
         continue
     
+    except:
+        print('Error in UART parsing.')
+
     try:
         # Read Si7021 
         temp_data = sensor.temperature
