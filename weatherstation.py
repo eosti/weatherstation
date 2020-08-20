@@ -107,12 +107,12 @@ while True:
         # print('Humidity: %0.1f %%' % humidity_data)
         aio.send(outside_humidity_feed.key, humidity_data)
 
-        # print('PM 1.0: ', pm10_standard)
-        aio.send(pm_1_feed.key, pm10_standard)
-        # print('PM 2.5: ', pm25_standard)
-        aio.send(pm_2_feed.key, pm25_standard)
-        # print('PM 10: ', pm100_standard)
-        aio.send(pm_10_feed.key, pm100_standard)
+        # print('PM 1.0: ', pm10_env)
+        aio.send(pm_1_feed.key, pm10_env)
+        # print('PM 2.5: ', pm25_env)
+        aio.send(pm_2_feed.key, pm25_env)
+        # print('PM 10: ', pm100_env)
+        aio.send(pm_10_feed.key, pm100_env)
     except:
         print('Unable to upload data. Skipping.')
     
