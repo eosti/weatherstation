@@ -81,12 +81,12 @@ while True:
             pm25_env, pm100_env, particles_03um, particles_05um, particles_10um, \
             particles_25um, particles_50um, particles_100um, skip, checksum = frame
 
-    check = sum(buffer[0:30])
+        check = sum(buffer[0:30])
 
-    if check != checksum:
-        buffer = []
-        print('UART checksum error. Skipping.')
-        continue
+        if check != checksum:
+            buffer = []
+            print('UART checksum error. Skipping.')
+            continue
     
     except:
         print('Error in UART parsing.')
