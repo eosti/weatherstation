@@ -46,8 +46,8 @@ while True:
 
     # Read air quality
     try:
-        uart.flushInput()
-        time.sleep(1)
+        uart.flushInput()       # Required to get the most current data
+        time.sleep(2)
         data = uart.read(32)  # read up to 32 bytes
     except:
         print('UART connection error. Skipping.')
