@@ -7,6 +7,7 @@ import time
 import board
 import busio
 import adafruit_si7021
+from datetime import datetime
 
 import config
 from Adafruit_IO import Client, Feed, RequestError
@@ -26,6 +27,8 @@ pm_2_feed = aio.feeds('pm-2-dot-5')
 pm_10_feed = aio.feeds('pm-10')
 
 print('Connected as %s' % config.io_api_username)
+
+print(datetime.now())
 
 # Create UART object for air quality
 import serial
