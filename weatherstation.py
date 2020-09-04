@@ -54,7 +54,6 @@ while True:
         data = uart.read(32)  # read up to 32 bytes
     except:
         print('UART connection error. Skipping.')
-        print(sys.exc_info()[0])
 
     data = list(data)
     # print("read: ", data)          # this is a bytearray type
@@ -94,7 +93,6 @@ while True:
     
     except:
         print('Error in UART parsing.')
-        print(sys.exc_info()[0])
 
     try:
         # Read Si7021 
@@ -102,7 +100,6 @@ while True:
         humidity_data = sensor.relative_humidity
     except:
         print('Si7021 read error. Skipping.')
-        print(sys.exc_info()[0])
 
     try:
         # Data collected, let's send it in!
@@ -122,7 +119,6 @@ while True:
         aio.send(pm_10_feed.key, pm100_env)
     except:
         print('Unable to upload data. Skipping.')
-        print(sys.exc_info()[0])
     
     # print()
 
