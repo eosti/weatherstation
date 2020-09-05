@@ -137,8 +137,6 @@ while True:
         logging.error('Unable to upload data. Skipping.')
         logging.exception("Exception occurred")
     
-    logging.debug()
-
     # Reset buffer
     buffer = buffer[32:]
 
