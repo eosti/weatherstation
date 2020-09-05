@@ -1,6 +1,6 @@
 try:
     import struct
-except Exception as e ImportError:
+except Exception as e:
     import ustruct as struct
 
 import time
