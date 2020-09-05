@@ -16,6 +16,14 @@ from Adafruit_IO import Client, Feed, RequestError
 # refresh time, in seconds.
 LOOP_DELAY = 120
 
+# Logging stuff
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    filename='logs/weatherstation.log'
+)
+
 # Create an instance of the REST client
 logging.info('Setting up Adafruit I/O and sensors...')
 aio = Client(config.io_api_username, config.io_api_key)
@@ -42,15 +50,6 @@ buffer = []
 i2c = busio.I2C(board.SCL, board.SDA)
 # Create temp/humidity object through I2C
 sensor = adafruit_si7021.SI7021(i2c)
-
-# Logging stuff
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    filename='weatherstation.log'
-
-)
 
 logging.info('Reading sensors every %d seconds.' % LOOP_DELAY)
 
