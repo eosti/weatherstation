@@ -19,9 +19,10 @@ LOOP_DELAY = 120
 # Logging stuff
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
+    format='%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
-    filename='logs/weatherstation.log'
+    filename='logs/weatherstation.log',
+    filemode='w',
 )
 
 # Create an instance of the REST client
