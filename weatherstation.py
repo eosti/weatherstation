@@ -60,7 +60,7 @@ try:
         # Read air quality
         try:
             uart.flushInput()       # Required to get the most current data
-            time.sleep(2)
+            time.sleep(3)
             data = uart.read(32)  # read up to 32 bytes
         except Exception as e:
             logging.warning('UART connection error. Skipping.')
@@ -136,6 +136,8 @@ try:
         except Exception as e:
             logging.error('Unable to upload data. Skipping.')
             logging.exception("Exception occurred")
+            logging.info('Resetting Adafruit I/O Connection')
+            aio = Client(config.io_api_username, config.io_api_key)
 
         # Reset buffer
         buffer = buffer[32:]
