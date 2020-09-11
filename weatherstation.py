@@ -144,8 +144,8 @@ try:
             aio.send(pm_2_feed.key, pm25_env)
             logging.debug('PM 10: ', pm100_env)
             aio.send(pm_10_feed.key, pm100_env)
-            logging.debug('AQI: ', current_aqi)
-            aio.send(aqi_feed.key, current_aqi)
+            logging.debug('AQI: ', float(current_aqi))
+            aio.send(aqi_feed.key, float(current_aqi))
         except Exception as e:
             logging.error('Unable to upload data. Skipping.')
             logging.exception("Exception occurred")
