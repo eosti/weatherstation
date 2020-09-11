@@ -36,7 +36,7 @@ outside_humidity_feed = aio.feeds('outside-humidity')
 pm_1_feed = aio.feeds('pm-1-dot-0')
 pm_2_feed = aio.feeds('pm-2-dot-5')
 pm_10_feed = aio.feeds('pm-10')
-aqi_feed = air.feeds('aqi')
+aqi_feed = aio.feeds('aqi')
 
 logging.info('Connected as %s' % config.io_api_username)
 
