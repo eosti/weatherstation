@@ -17,7 +17,7 @@ It also uses the [python-aqi](https://github.com/hrbonz/python-aqi) library to c
 
 Use `sudo raspi-config` to enable I2C, disable the serial login shell, and enable the serial port hardware. 
 
-Wire both sensors to the RPi using the standard I2C and UART pins. Be wary of voltage levels: the Si7021 runs on 3.3V whereas the PM2.5 sensor runs on 5V. 
+Wire both sensors to the RPi using the standard I2C (for the Si7021) and UART (for the PM2.5 sensor) pins. Be wary of voltage levels: the Si7021 runs on 3.3V whereas the PM2.5 sensor runs on 5V. 
 
 ## Usage
 1. Clone repo onto the pi.
@@ -29,3 +29,5 @@ io_api_key = YOUR_APIKEY
 ```
 3. Tell the pi to run `weatherstation.py` at boot. I used `crontab` to do this, but there are other options.  
 4. Reboot!
+
+Side note: for whatever reason, the Pi seems to run into issues with UART communications every two nights or so. The root cause is to be determined, but I slapped a bandaid on it by restarting the Pi every night at 3am with `crontab`. 
