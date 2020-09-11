@@ -9,6 +9,7 @@ import board
 import busio
 import adafruit_si7021
 from datetime import datetime
+import aqi
 
 import config
 from Adafruit_IO import Client, Feed, RequestError
@@ -35,6 +36,7 @@ outside_humidity_feed = aio.feeds('outside-humidity')
 pm_1_feed = aio.feeds('pm-1-dot-0')
 pm_2_feed = aio.feeds('pm-2-dot-5')
 pm_10_feed = aio.feeds('pm-10')
+aqi_feed = air.feeds('aqi')
 
 logging.info('Connected as %s' % config.io_api_username)
 
@@ -107,6 +109,15 @@ try:
             logging.warning('Error in UART parsing.')
             logging.exception("Exception occurred")
 
+        try:
+            # Convert PM values to AQI
+            current_aqi = aqi.to_aqi([
+                (aqi.POLLUTANT_PM25, pm25_env),
+                (aqi.POLLUTANT_PM10, pm100_env),
+            ])
+        except Exception as e:
+            logging.warning('PM conversion failed. Skipping.')
+            logging.exception("Exception occurred")
 
         try:
             # Read Si7021 
@@ -133,6 +144,8 @@ try:
             aio.send(pm_2_feed.key, pm25_env)
             logging.debug('PM 10: ', pm100_env)
             aio.send(pm_10_feed.key, pm100_env)
+            logging.debug('AQI: ', current_aqi)
+            aio.send(aqi_feed.key, current_aqi)
         except Exception as e:
             logging.error('Unable to upload data. Skipping.')
             logging.exception("Exception occurred")
