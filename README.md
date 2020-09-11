@@ -11,8 +11,9 @@ A Pi Zero W-based weatherstation, capable of monitoring PM1.0, PM2.5, PM10, temp
 ## Prerequisites
 
 This project uses the Adafruit libraries [adafruit-blinka](https://github.com/adafruit/Adafruit_Blinka), [adafruit-circuitpython-si7021](https://github.com/adafruit/Adafruit_CircuitPython_SI7021), and [adafruit-io](https://github.com/adafruit/Adafruit_IO_Python). 
+It also uses the [python-aqi](https://github.com/hrbonz/python-aqi) library to convert from the native PM2.5 and PM10 values to a more universally known format. 
 
-`pip3 install adafruit-blinka adafruit-circuitpython-si7021 adafruit-io` 
+`pip3 install adafruit-blinka adafruit-circuitpython-si7021 adafruit-io python-aqi` 
 
 Use `sudo raspi-config` to enable I2C, disable the serial login shell, and enable the serial port hardware. 
 
