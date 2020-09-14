@@ -23,7 +23,7 @@ my_logger = logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
-    filename='logs/weatherstation.log',
+    filename=LOG_FILENAME,
     filemode='w',
 )
 
