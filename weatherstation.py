@@ -19,13 +19,8 @@ from Adafruit_IO import Client, Feed, RequestError
 LOOP_DELAY = 120
 
 # Logging stuff
-my_logger = logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    filename=config.LOG_FILENAME,
-    filemode='w',
-)
+my_logger = logging.getLogger('MyLogger')
+my_logger.setLevel(logging.DEBUG)
 
 handler = logging.handlers.RotatingFileHandler(
               config.LOG_FILENAME, maxBytes=10*1024*1024, backupCount=5)
