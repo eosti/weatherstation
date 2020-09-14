@@ -26,6 +26,11 @@ logging.basicConfig(
     filemode='w',
 )
 
+handler = logging.handlers.RotatingFileHandler(
+              LOG_FILENAME, maxBytes=10*1024*1024, backupCount=5)
+logging.addHandler(handler)
+
+
 # Create an instance of the REST client
 logging.info('Setting up Adafruit I/O and sensors...')
 aio = Client(config.io_api_username, config.io_api_key)
