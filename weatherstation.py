@@ -23,12 +23,12 @@ my_logger = logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
-    filename=LOG_FILENAME,
+    filename=config.LOG_FILENAME,
     filemode='w',
 )
 
 handler = logging.handlers.RotatingFileHandler(
-              LOG_FILENAME, maxBytes=10*1024*1024, backupCount=5)
+              config.LOG_FILENAME, maxBytes=10*1024*1024, backupCount=5)
 my_logger.addHandler(handler)
 
 
