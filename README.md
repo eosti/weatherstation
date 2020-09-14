@@ -24,9 +24,9 @@ Wire both sensors to the RPi using the standard I2C (for the Si7021) and UART (f
 2. Create `config.py` inside the weatherstation directory that sets io_api_username and io_api_key to your Adafruit I/O username and API key respectively. Additionally, add the location that you want the log files to go to.
 ```
 # config.py
-io_api_username = YOUR_USERNAME
-io_api_key = YOUR_APIKEY
-LOG_FILENAME = /some/file/path/relative/to/execution/point
+io_api_username = "YOUR_USERNAME"
+io_api_key = "YOUR_APIKEY"
+LOG_FILENAME = "/some/file/path/relative/to/execution/point"
 ```
 3. Tell the pi to run `weatherstation.py` at boot. I used `crontab` to do this, but there are other options.  
 4. Reboot!
