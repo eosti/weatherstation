@@ -139,13 +139,13 @@ try:
             my_logger.debug('Humidity: %0.1f %%' % humidity_data)
             aio.send(outside_humidity_feed.key, humidity_data)
 
-            my_logger.debug('PM 1.0: %0i', % pm10_env)
+            my_logger.debug('PM 1.0: %0i' % pm10_env)
             aio.send(pm_1_feed.key, pm10_env)
-            my_logger.debug('PM 2.5: %0i', % pm25_env)
+            my_logger.debug('PM 2.5: %0i' % pm25_env)
             aio.send(pm_2_feed.key, pm25_env)
-            my_logger.debug('PM 10: %0i', % pm100_env)
+            my_logger.debug('PM 10: %0i' % pm100_env)
             aio.send(pm_10_feed.key, pm100_env)
-            my_logger.debug('AQI: %0i', % float(current_aqi))
+            my_logger.debug('AQI: %0i' % float(current_aqi))
             aio.send(aqi_feed.key, float(current_aqi))
         except Exception as e:
             my_logger.error('Unable to upload data. Skipping.')
