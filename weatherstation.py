@@ -19,7 +19,7 @@ LOOP_DELAY = 120
 
 # Logging stuff
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
     filename='logs/weatherstation.log',
@@ -61,11 +61,13 @@ try:
 
         # Read air quality
         try:
+            logging.debug(uart.in_waiting)
             uart.flushInput()       # Required to get the most current data
             time.sleep(3)
             data = uart.read(32)  # read up to 32 bytes
         except Exception as e:
             logging.warning('UART connection error. Skipping.')
+            # possible that sometimes the flushing happens inbetween packets thus messing with the recieves
             logging.exception("Exception occurred")
 
 
