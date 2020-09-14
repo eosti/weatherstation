@@ -18,7 +18,7 @@ from Adafruit_IO import Client, Feed, RequestError
 LOOP_DELAY = 120
 
 # Logging stuff
-logging.basicConfig(
+my_logger = logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
@@ -28,7 +28,7 @@ logging.basicConfig(
 
 handler = logging.handlers.RotatingFileHandler(
               LOG_FILENAME, maxBytes=10*1024*1024, backupCount=5)
-logging.addHandler(handler)
+my_logger.addHandler(handler)
 
 
 # Create an instance of the REST client
