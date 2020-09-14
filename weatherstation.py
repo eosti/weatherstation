@@ -5,6 +5,7 @@ except Exception as e:
 
 import time
 import logging
+import logging.handlers
 import board
 import busio
 import adafruit_si7021
