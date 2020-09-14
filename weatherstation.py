@@ -77,8 +77,6 @@ try:
 
 
         data = list(data)
-        logging.debug("read: ", data)          # this is a bytearray type
-
         buffer += data
 
         while buffer and buffer[0] != 0x42:
