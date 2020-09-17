@@ -45,7 +45,10 @@ logging.info(datetime.now())
 
 # Create UART object for air quality
 import serial
-uart = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=0.25)
+uart = serial.Serial()
+uart.baudrate = 9600
+uart.port = "/dev/ttyS0"
+uart.timeout = 0.25
 
 # Buffer for UART
 buffer = []
