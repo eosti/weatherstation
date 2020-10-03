@@ -72,14 +72,12 @@ try:
         # Read air quality
         try:
             logging.debug(uart.in_waiting)
-            uart.flushInput()       # Required to get the most current data
             uart.open();
             time.sleep(3)
             data = uart.read(32)  # read up to 32 bytes
             uart.close();
         except Exception as e:
             logging.warning('UART connection error. Skipping.')
-            # possible that sometimes the flushing happens inbetween packets thus messing with the recieves
             logging.exception("Exception occurred")
 
 
