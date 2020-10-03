@@ -71,7 +71,6 @@ try:
 
         # Read air quality
         try:
-            logging.debug(uart.in_waiting)
             uart.open();
             time.sleep(3)
             data = uart.read(32)  # read up to 32 bytes
