@@ -129,6 +129,7 @@ try:
             logging.warning('PM conversion failed. Skipping.')
             logging.exception("Exception occurred")
 
+        logging.warning("reading i2c")
         signal.alarm(10) # ten second timeout for I2C
         try:
             # Read Si7021 
@@ -140,6 +141,7 @@ try:
 
         signal.alarm(0) # disable timeout
 
+        logging.warning("sending data")
         try:
             # Data collected, let's send it in!
             logging.debug('Sending data to Adafruit I/O...')
