@@ -11,6 +11,7 @@ import busio
 import adafruit_si7021
 from datetime import datetime
 import aqi
+import signal
 
 import config
 from Adafruit_IO import Client, Feed, RequestError
@@ -57,6 +58,11 @@ buffer = []
 i2c = busio.I2C(board.SCL, board.SDA)
 # Create temp/humidity object through I2C
 sensor = adafruit_si7021.SI7021(i2c)
+
+# timeout handlers
+def signal_handler(signum, frame):
+    raise Exception("Timed out!")
+signal.signal(signal.SIGALRM, signal_handler)
 
 logging.info('Reading sensors every %d seconds.' % LOOP_DELAY)
 try:
@@ -125,6 +131,7 @@ try:
             logging.warning('PM conversion failed. Skipping.')
             logging.exception("Exception occurred")
 
+        signal.alarm(10) # ten second timeout for I2C
         try:
             # Read Si7021 
             temp_data = sensor.temperature
@@ -133,6 +140,7 @@ try:
             logging.warning('Si7021 read error. Skipping.')
             logging.exception("Exception occurred")
 
+        signal.alarm(0) # disable timeout
 
         try:
             # Data collected, let's send it in!
