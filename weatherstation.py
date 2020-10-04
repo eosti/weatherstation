@@ -12,6 +12,7 @@ import adafruit_si7021
 from datetime import datetime
 import aqi
 import signal
+from importlib import reload
 
 import config
 from Adafruit_IO import Client, Feed, RequestError
@@ -137,6 +138,7 @@ try:
         except Exception as e:
             logging.warning('Si7021 read error. Skipping.')
             logging.exception("Exception occurred")
+            reload(adafruit_si7021) # Reloads sensor library
 
         signal.alarm(0) # disable timeout
 
