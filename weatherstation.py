@@ -22,7 +22,7 @@ LOOP_DELAY = 120
 
 # Logging stuff
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
     filename=config.LOG_FILENAME,
@@ -129,20 +129,19 @@ try:
             logging.warning('PM conversion failed. Skipping.')
             logging.exception("Exception occurred")
 
-        logging.warning("reading i2c")
         signal.alarm(10) # ten second timeout for I2C
         try:
             # Read Si7021 
             temp_data = sensor.temperature
             humidity_data = sensor.relative_humidity
         except Exception as e:
-            logging.warning('Si7021 read error. Skipping.')
+            logging.warning('Si7021 read error. Reloading library. Skipping.')
             logging.exception("Exception occurred")
-            reload(adafruit_si7021) # Reloads sensor library
+            adafruit_si7021 = reload(adafruit_si7021) # Reloads sensor library
+            sensor = adafruit_si7021.SI7021(i2c)
 
         signal.alarm(0) # disable timeout
 
-        logging.warning("sending data")
         try:
             # Data collected, let's send it in!
             logging.debug('Sending data to Adafruit I/O...')
