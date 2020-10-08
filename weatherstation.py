@@ -131,13 +131,20 @@ try:
 
         signal.alarm(10) # ten second timeout for I2C
         try:
-            # Read Si7021 
-            temp_data = sensor.temperature
-            humidity_data = sensor.relative_humidity
+            try:
+                # Read Si7021 
+                temp_data = sensor.temperature
+                humidity_data = sensor.relative_humidity
+            except Exception as e:
+                logging.warning('Si7021 read error. Reloading library. Skipping.')
+                logging.exception("Exception occurred")
+                adafruit_si7021 = reload(adafruit_si7021) # Reloads sensor library
+                sensor = adafruit_si7021.SI7021(i2c)
         except Exception as e:
-            logging.warning('Si7021 read error. Reloading library. Skipping.')
+            logging.warning("Reloading library failed, waiting 30s and retrying.")
             logging.exception("Exception occurred")
-            adafruit_si7021 = reload(adafruit_si7021) # Reloads sensor library
+            time.sleep(30)
+            adafruit_si7021 = reload(adafruit_si7021)
             sensor = adafruit_si7021.SI7021(i2c)
 
         signal.alarm(0) # disable timeout
