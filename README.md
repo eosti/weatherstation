@@ -31,4 +31,4 @@ LOG_FILENAME = "/some/file/path/relative/to/execution/point"
 3. Tell the pi to run `weatherstation.py` at boot. I used `crontab` to do this, but there are other options.  
 4. Reboot!
 
-Side note: for whatever reason, the Pi seems to run into issues with UART communications every two nights or so. The root cause is to be determined, but I slapped a bandaid on it by restarting the Pi every night at 3am with `crontab`. 
+There are handlers for both I2C and UART communication issues, so it _should_ be able to be run indefinitely. I'm in the process of doing long-term testing which takes a while for obvious reasons. 
