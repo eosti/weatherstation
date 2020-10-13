@@ -143,6 +143,7 @@ try:
         except Exception as e:
             logging.warning("Reloading library failed, waiting 30s and retrying.")
             logging.exception("Exception occurred")
+            signal.alarm(0)
             time.sleep(30)
             adafruit_si7021 = reload(adafruit_si7021)
             sensor = adafruit_si7021.SI7021(i2c)
