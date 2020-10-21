@@ -13,6 +13,7 @@ from datetime import datetime
 import aqi
 import signal
 from importlib import reload
+import os
 
 import config
 from Adafruit_IO import Client, Feed, RequestError
@@ -183,3 +184,6 @@ try:
 except Exception as e:
     logging.critical('Something very bad just happened.')
     logging.exception('Exception occurred')
+    time.sleep(300)  # Wait a little while to prevent reboot loop
+    logging.critical('Rebooting!')
+    os.system('sudo reboot now')
