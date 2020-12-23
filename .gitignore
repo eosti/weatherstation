@@ -3,3 +3,6 @@ config.py
 
 # No cache files
 __pycache__
+
+# No log files either   
+logs
