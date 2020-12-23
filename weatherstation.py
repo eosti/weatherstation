@@ -14,6 +14,7 @@ import aqi
 import signal
 from importlib import reload
 import os
+import sys
 
 import config
 from Adafruit_IO import Client, Feed, RequestError
@@ -21,14 +22,18 @@ from Adafruit_IO import Client, Feed, RequestError
 # refresh time, in seconds.
 LOOP_DELAY = 120
 
-# Logging stuff
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    filename=config.LOG_FILENAME,
-    filemode='w',
-)
+# Logging Config
+logger = logging.getLogger('weatherstation')
+logger.setLevel(logging.INFO)
+
+# Format, max size 5MB, 4 backups
+formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s')
+logHandler = handlers.RotatingFileHandler(config.LOG_FILENAME, maxBytes=5*1024*1024, backupCount=4)
+logHandler.setLevel(logging.INFO)
+logger.addHandler(logHandler)
+
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)
 
 # Create an instance of the REST client
 logging.info('Setting up Adafruit I/O and sensors...')
@@ -42,9 +47,9 @@ pm_2_feed = aio.feeds('pm-2-dot-5')
 pm_10_feed = aio.feeds('pm-10')
 aqi_feed = aio.feeds('aqi')
 
-logging.info('Connected as %s' % config.io_api_username)
+logger.info('Connected as %s' % config.io_api_username)
 
-logging.info(datetime.now())
+logger.info(datetime.now())
 
 # Create UART object for air quality
 import serial
@@ -66,10 +71,10 @@ def signal_handler(signum, frame):
     raise Exception("Timed out!")
 signal.signal(signal.SIGALRM, signal_handler)
 
-logging.info('Reading sensors every %d seconds.' % LOOP_DELAY)
+logger.info('Reading sensors every %d seconds.' % LOOP_DELAY)
 try:
     while True:
-        logging.debug('Reading sensors...')
+        logger.debug('Reading sensors...')
 
         # Read air quality
         try:
@@ -78,8 +83,8 @@ try:
             data = uart.read(32)  # read up to 32 bytes
             uart.close();
         except Exception as e:
-            logging.warning('UART connection error. Skipping.')
-            logging.exception("Exception occurred")
+            logger.warning('UART connection error. Skipping.')
+            logger.exception("Exception occurred")
 
 
         data = list(data)
@@ -100,7 +105,7 @@ try:
         frame_len = struct.unpack(">H", bytes(buffer[2:4]))[0]
         if frame_len != 28:
             buffer = []
-            logging.warning('Incorrect UART packet length. Skipping.')
+            logger.warning('Incorrect UART packet length. Skipping.')
             continue
         try:
             frame = struct.unpack(">HHHHHHHHHHHHHH", bytes(buffer[4:]))
@@ -113,12 +118,12 @@ try:
 
             if check != checksum:
                 buffer = []
-                logging.warning('UART checksum error. Skipping.')
+                logger.warning('UART checksum error. Skipping.')
                 continue
 
         except Exception as e:
-            logging.warning('Error in UART parsing.')
-            logging.exception("Exception occurred")
+            logger.warning('Error in UART parsing.')
+            logger.exception("Exception occurred")
 
         try:
             # Convert PM values to AQI
@@ -127,8 +132,8 @@ try:
                 (aqi.POLLUTANT_PM10, pm100_env),
             ])
         except Exception as e:
-            logging.warning('PM conversion failed. Skipping.')
-            logging.exception("Exception occurred")
+            logger.warning('PM conversion failed. Skipping.')
+            logger.exception("Exception occurred")
 
         signal.alarm(10) # ten second timeout for I2C
         try:
@@ -137,13 +142,13 @@ try:
                 temp_data = sensor.temperature
                 humidity_data = sensor.relative_humidity
             except Exception as e:
-                logging.warning('Si7021 read error. Reloading library. Skipping.')
-                logging.exception("Exception occurred")
+                logger.warning('Si7021 read error. Reloading library. Skipping.')
+                logger.exception("Exception occurred")
                 adafruit_si7021 = reload(adafruit_si7021) # Reloads sensor library
                 sensor = adafruit_si7021.SI7021(i2c)
         except Exception as e:
-            logging.warning("Reloading library failed, waiting 30s and retrying.")
-            logging.exception("Exception occurred")
+            logger.warning("Reloading library failed, waiting 30s and retrying.")
+            logger.exception("Exception occurred")
             signal.alarm(0)
             time.sleep(30)
             adafruit_si7021 = reload(adafruit_si7021)
@@ -153,26 +158,26 @@ try:
 
         try:
             # Data collected, let's send it in!
-            logging.debug('Sending data to Adafruit I/O...')
-            logging.debug("---------------------------------------")
+            logger.debug('Sending data to Adafruit I/O...')
+            logger.debug("---------------------------------------")
 
-            logging.debug('Temperature: %0.1f C' % temp_data)
+            logger.debug('Temperature: %0.1f C' % temp_data)
             aio.send(outside_temp_feed.key, temp_data)
-            logging.debug('Humidity: %0.1f %%' % humidity_data)
+            logger.debug('Humidity: %0.1f %%' % humidity_data)
             aio.send(outside_humidity_feed.key, humidity_data)
 
-            logging.debug('PM 1.0: %0i' % pm10_env)
+            logger.debug('PM 1.0: %0i' % pm10_env)
             aio.send(pm_1_feed.key, pm10_env)
-            logging.debug('PM 2.5: %0i' % pm25_env)
+            logger.debug('PM 2.5: %0i' % pm25_env)
             aio.send(pm_2_feed.key, pm25_env)
-            logging.debug('PM 10: %0i' % pm100_env)
+            logger.debug('PM 10: %0i' % pm100_env)
             aio.send(pm_10_feed.key, pm100_env)
-            logging.debug('AQI: %0i' % float(current_aqi))
+            logger.debug('AQI: %0i' % float(current_aqi))
             aio.send(aqi_feed.key, float(current_aqi))
         except Exception as e:
-            logging.error('Unable to upload data. Skipping.')
-            logging.exception("Exception occurred")
-            logging.info('Resetting Adafruit I/O Connection')
+            logger.error('Unable to upload data. Skipping.')
+            logger.exception("Exception occurred")
+            logger.info('Resetting Adafruit I/O Connection')
             aio = Client(config.io_api_username, config.io_api_key)
 
         # Reset buffer
@@ -182,8 +187,9 @@ try:
         time.sleep(LOOP_DELAY)
 
 except Exception as e:
-    logging.critical('Something very bad just happened.')
-    logging.exception('Exception occurred')
+    logger.critical('Something very bad just happened.')
+    logger.exception('Exception occurred')
     time.sleep(300)  # Wait a little while to prevent reboot loop
-    logging.critical('Rebooting!')
+    logger.critical('Rebooting!')
     os.system('sudo reboot now')
+    sys.exit()
