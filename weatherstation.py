@@ -35,6 +35,10 @@ logger.addHandler(logHandler)
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 
+# Make it obvious we started
+logger.warning('.\n.\n.\n')
+logger.info('Welcome to weatherstation.local! \n')
+
 # Create an instance of the REST client
 logger.info('Setting up Adafruit I/O and sensors...')
 aio = Client(config.io_api_username, config.io_api_key)
