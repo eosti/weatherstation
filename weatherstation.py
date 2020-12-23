@@ -35,6 +35,7 @@ logger.addHandler(logHandler)
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 
+time.sleep(1) # Let the logger do a think
 # Create an instance of the REST client
 logging.info('Setting up Adafruit I/O and sensors...')
 aio = Client(config.io_api_username, config.io_api_key)
