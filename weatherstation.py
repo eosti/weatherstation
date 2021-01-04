@@ -14,6 +14,7 @@ from adafruit_pm25.uart import PM25_UART
 import aqi
 import config
 from Adafruit_IO import Client, Feed, RequestError
+import paho.mqtt.client as mqtt
 
 # Logging Config
 logger = logging.getLogger('weatherstation')
@@ -53,6 +54,11 @@ pm25 = PM25_UART(uart, reset_pin)
 # Create I2C SI7021 device
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_si7021.SI7021(i2c)
+
+# Set up MQTT client
+mqtt_client = mqtt.Client()
+mqtt_client.enable_logger(logger=logger)
+mqtt_client.connect(config.mqtt_server, config.mqtt_port, config.mqtt_keepalive)
 
 time.sleep(1)
 
@@ -102,5 +108,19 @@ try:
     logger.debug('AQI: %0i' % float(current_aqi))
     aio.send(aqi_feed.key, float(current_aqi))
 except Exception as e:
-    logger.error('Unable to upload data. Skipping.')
+    logger.error('Unable to upload data to Adafruit I/O. Skipping.')
     logger.exception("Exception occurred")
+
+try:
+    logger.info('Sending data to MQTT')
+    mqtt_client.publish(config.mqtt_temp_topic, temp_data)
+    logger.debug('Temperature of %0.1f C published to %s' % (temp_data, config.mqtt_temp_topic))
+    mqtt_client.publish(config.mqtt_humidity_topic, humidity_data)
+    logger.debug('Humidity of %0.1f %% published to %s' % (humidity_data, config.mqtt_humidity_topic))
+    mqtt_client.publish(config.mqtt_aqi_topic, float(current_aqi))
+    logger.debug('AQI of %0i published to %s' % (float(current_aqi), config.mqtt_aqi_topic))
+except Exception as e:
+    logger.error('Unable to publish data to MQTT. Skipping')
+    logger.exception("Exception occurred")
+
+mqtt_client.disconnect()
