@@ -28,7 +28,7 @@ io_api_username = "YOUR_USERNAME"
 io_api_key = "YOUR_APIKEY"
 LOG_FILENAME = "/some/file/path/relative/to/execution/point"
 ```
-3. Tell the pi to run `weatherstation.py` at boot. I used `crontab` to do this, but there are other options.  
-4. Reboot!
 
-There are handlers for both I2C and UART communication issues, so it _should_ be able to be run indefinitely. I'm in the process of doing long-term testing which takes a while for obvious reasons. 
+3. Configure `cron` to execute this script every two minutes, or however often you'd like. Using `crontab -e`, add the line `*/2 * * * * python3 ~pi/weatherstation/weatherstation.py > ~pi/logs/crontab 2&>1`, substituting in your username, script location, and log location.
+
+4. Reboot!

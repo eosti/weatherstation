@@ -54,6 +54,8 @@ pm25 = PM25_UART(uart, reset_pin)
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_si7021.SI7021(i2c)
 
+time.sleep(1)
+
 logger.info('Reading sensors...')
 
 # Read air quality
