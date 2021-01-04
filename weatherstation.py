@@ -1,4 +1,3 @@
-# TODO: Make this operate as a oneshot through cron
 try:
     import struct
 except Exception as e:
@@ -19,11 +18,11 @@ import paho.mqtt.client as mqtt
 
 # Logging Config
 logger = logging.getLogger('weatherstation')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 
 # Format, max size 5MB, 4 backups
 formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(levelname)s - %(funcName)s: %(message)s')
-logHandler = handlers.RotatingFileHandler(config.LOG_FILENAME, maxBytes=5*1024*1024, backupCount=4)
+logHandler = handlers.RotatingFileHandler(config.log_filename, maxBytes=5*1024*1024, backupCount=4)
 logHandler.setLevel(logging.INFO)
 logger.addHandler(logHandler)
 

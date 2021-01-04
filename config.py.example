@@ -1,0 +1,16 @@
+# config.py.example
+# These are example values; modify to suit your needs
+# Rename this file to config.py to use as the configuration file
+
+io_api_username = "my_username"
+io_api_key = "my_api_key"
+
+log_filename = "logs/weatherstation.log"
+
+mqtt_server = "ip.ip.ip.ip"
+mqtt_port = 1883
+mqtt_keepalive = 60
+
+mqtt_temp_topic = "weather/temp"
+mqtt_humidity_topic = "weather/humidity"
+mqtt_aqi_topic = "weather/aqi"
