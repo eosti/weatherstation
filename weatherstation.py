@@ -8,6 +8,7 @@ import logging
 import logging.handlers as handlers
 import board
 import busio
+import serial
 import adafruit_si7021
 from adafruit_pm25.uart import PM25_UART
 import aqi
@@ -28,7 +29,7 @@ logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 
 # Make it obvious we started
-logger.info('\n.\n')
+logger.info('\n')
 
 # Create an instance of the REST client
 logger.info('Setting up Adafruit I/O and sensors...')
@@ -42,10 +43,10 @@ pm_2_feed = aio.feeds('pm-2-dot-5')
 pm_10_feed = aio.feeds('pm-10')
 aqi_feed = aio.feeds('aqi')
 
-logger.info('Connected as %s' % config.io_api_username)
+logger.debug('Connected as %s' % config.io_api_username)
 
 # Create UART PM2.5 device
-uart = busio.UART("/dev/ttyS0", baudrate=9600, timeout=0.25)
+uart = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=0.25)
 reset_pin = None
 pm25 = PM25_UART(uart, reset_pin)
 
@@ -53,7 +54,7 @@ pm25 = PM25_UART(uart, reset_pin)
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_si7021.SI7021(i2c)
 
-logger.debug('Reading sensors...')
+logger.info('Reading sensors...')
 
 # Read air quality
 try:
@@ -82,7 +83,7 @@ except Exception as e:
 
 # Data collected, let's send it in!
 try:
-    logger.debug('Sending data to Adafruit I/O...')
+    logger.info('Sending data to Adafruit I/O...')
     logger.debug("---------------------------------------")
 
     logger.debug('Temperature: %0.1f C' % temp_data)
